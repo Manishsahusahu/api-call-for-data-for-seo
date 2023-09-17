@@ -11,38 +11,34 @@ exports.taskId = async function (req, res, next) {
       });
 
     //find task id;
-    // const post_array = [];
-    // post_array.push({
-    //   target: targetUrl,
-    //   max_crawl_pages: 5,
-    //   load_resources: true,
-    //   enable_javascript: true,
-    //   custom_js: "meta = {}; meta.url = document.URL; meta;",
-    // });
-    // const response = await axios({
-    //   method: "post",
-    //   url: "https://api.dataforseo.com/v3/on_page/task_post",
-    //   auth: {
-    //     username: process.env.USERNAME,
-    //     password: process.env.PASSWORD,
-    //   },
-    //   data: post_array,
-    //   headers: {
-    //     "content-type": "application/json",
-    //   },
-    // });
-    // const result = response["data"]["tasks"];
-    // // Result data
-    // const taskId = result[0].id;
-    // req.id = taskId;
-
-    // setTimeout(() => {
-    //   next();
-    // }, 30000);
-    res.status(200).json({
-      success: true,
-      message: targetUrl,
+    const post_array = [];
+    post_array.push({
+      target: targetUrl,
+      max_crawl_pages: 5,
+      load_resources: true,
+      enable_javascript: true,
+      custom_js: "meta = {}; meta.url = document.URL; meta;",
     });
+    const response = await axios({
+      method: "post",
+      url: "https://api.dataforseo.com/v3/on_page/task_post",
+      auth: {
+        username: process.env.USERNAME,
+        password: process.env.PASSWORD,
+      },
+      data: post_array,
+      headers: {
+        "content-type": "application/json",
+      },
+    });
+    const result = response["data"]["tasks"];
+    // Result data
+    const taskId = result[0].id;
+    req.id = taskId;
+
+    setTimeout(() => {
+      next();
+    }, 30000);
   } catch (error) {
     res.status(400).json({
       message: error.message,
